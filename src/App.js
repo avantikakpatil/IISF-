@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
 import DataUpload from "./components/DataUpload";
@@ -9,9 +9,12 @@ import Alerts from "./components/Alerts";
 
 const App = () => {
     return (
-        <Router>
+        <BrowserRouter>
             <div style={{ display: "flex" }}>
+                {/* Sidebar */}
                 <Sidebar />
+
+                {/* Main Content */}
                 <main style={{ marginLeft: "250px", padding: "20px", width: "100%" }}>
                     <Routes>
                         <Route path="/" element={<Dashboard />} />
@@ -22,7 +25,7 @@ const App = () => {
                     </Routes>
                 </main>
             </div>
-        </Router>
+        </BrowserRouter>
     );
 };
 
