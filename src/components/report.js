@@ -40,7 +40,7 @@ const Report = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {pdfDoc && (
-        <div style={{ position: 'relative', width: '600px', height: '400px' }}>
+        <div style={{ position: 'relative', width: '800px', height: '600px' }}>
           <h2>Generated Report</h2>
           <iframe
             src={pdfDoc.output('datauristring')}
@@ -65,7 +65,7 @@ const Report = () => {
             backgroundColor: reportData ? '#4CAF50' : '#ddd',
             color: 'white',
             marginRight: '10px',
-            marginTop:'10px',
+            marginTop: '10px',
           }}
           disabled={!reportData}
           onClick={handleGenerateReport}
@@ -80,7 +80,7 @@ const Report = () => {
             cursor: 'pointer',
             backgroundColor: '#2196F3',
             color: 'white',
-            marginTop:'10px',
+            marginTop: '10px',
           }}
           onClick={handleDownloadReport}
         >
