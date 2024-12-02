@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Papa from "papaparse"; // For parsing CSV
 import "./RealTimeData.css";
@@ -87,13 +86,17 @@ const RealTimeData = () => {
   };
 
   useEffect(() => {
-    if (csvData.length > 0) {
-      fetchEnvironmentalData(selectedDate);
-    }
-  }, [selectedDate, csvData]);
+    // Initial fetch for the selected date
+    fetchEnvironmentalData(selectedDate);
+  }, [selectedDate]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+  };
+
+  const formatSelectedDate = (date) => {
+    // Format the date as YYYY-MM-DD
+    return date.toISOString().slice(0, 16);
   };
 
   const ParameterDisplay = ({ label, value, unit }) => (
@@ -122,7 +125,7 @@ const RealTimeData = () => {
         <div className="error-card">
           <div className="error-icon">❌</div>
           <div className="error-title">Failed to Fetch Data</div>
-          <div className="error-message">{error}</div>
+          <div className="error-message">There was an issue while fetching the environmental data. Please try again later.</div>
         </div>
       </div>
     );
@@ -135,49 +138,26 @@ const RealTimeData = () => {
       {/* Date Picker */}
       <input
         type="datetime-local"
-        onChange={handleDateChange}
+        onChange={(e) => handleDateChange(new Date(e.target.value))}
         value={formatSelectedDate(selectedDate)}  // Ensure the correct format is set
       />
       
       {/* Display the selected date */}
       <h2>Selected Date: {formatSelectedDate(selectedDate)}</h2>
       
-      {/* Display the filtered data */}
-      {filteredData.length > 0 ? (
+      {/* Display the environmental data */}
+      <div>
+        <h3>Environmental Data for {formatSelectedDate(selectedDate)}:</h3>
         <div>
-          <h3>Data for {formatSelectedDate(selectedDate)}:</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Temperature (°C)</th>
-                <th>Pressure (bar)</th>
-                <th>Salinity (PSU)</th>
-                <th>Oxygen Level (mg/L)</th>
-                <th>pH Levels</th>
-                <th>Biodiversity (Species Count)</th>
-                <th>Pollutants (ppm)</th>
-                <th>Ocean Currents (m/s)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((data, index) => (
-                <tr key={index}>
-                  <td>{data["Temperature (°C)"]}</td>
-                  <td>{data["Pressure (bar)"]}</td>
-                  <td>{data["Salinity (PSU)"]}</td>
-                  <td>{data["Oxygen Level (mg/L)"]}</td>
-                  <td>{data["pH Levels"]}</td>
-                  <td>{data["Biodiversity (Species Count)"]}</td>
-                  <td>{data["Pollutants (ppm)"]}</td>
-                  <td>{data["Ocean Currents (m/s)"]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ParameterDisplay label="Temperature" value={environmentalData.temperature} unit="°C" />
+          <ParameterDisplay label="Pressure" value={environmentalData.pressure} unit="bar" />
+          <ParameterDisplay label="Salinity" value={environmentalData.salinity} unit="PSU" />
+          <ParameterDisplay label="Oxygen Level" value={environmentalData.oxygenLevel} unit="mg/L" />
+          <ParameterDisplay label="pH Levels" value={environmentalData.pH} unit="" />
+          <ParameterDisplay label="Current Speed" value={environmentalData.currentSpeed} unit="m/s" />
+          <ParameterDisplay label="Depth" value={environmentalData.depth} unit="m" />
         </div>
-      ) : (
-        <p>No data available for the selected date and time</p>
-      )}
+      </div>
     </div>
   );
 };
