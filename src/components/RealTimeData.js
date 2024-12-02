@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker styles
+import "react-datepicker/dist/react-datepicker.css";
+import Papa from "papaparse"; // For parsing CSV
 import "./RealTimeData.css";
 
 const GlobalStyles = () => (
@@ -12,20 +12,8 @@ const GlobalStyles = () => (
       font-family: "Arial", sans-serif;
       background-color: #f0f4f8;
     }
-    /* Add custom styles here */
   `}</style>
 );
-
-// Sample dummy data
-const dummyData = {
-  depth: 5000,
-  temperature: 4.2,
-  salinity: 35.4,
-  pressure: 500,
-  oxygenLevel: 7.8,
-  currentSpeed: 1.2,
-  pH: 7.9,
-};
 
 const RealTimeData = () => {
   const [environmentalData, setEnvironmentalData] = useState({
@@ -37,40 +25,72 @@ const RealTimeData = () => {
     currentSpeed: null,
     pH: null,
   });
+  const [csvData, setCsvData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const fetchEnvironmentalData = async (timestamp) => {
+  // Fetch and parse CSV on component mount
+  useEffect(() => {
+    const fetchAndParseCSV = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("/data/environmental_data.csv"); // Update the path as per your project structure
+        const rawCsvData = await response.text();
+        const parsedData = await new Promise((resolve, reject) => {
+          Papa.parse(rawCsvData, {
+            header: true,
+            complete: (results) => resolve(results.data),
+            error: (err) => reject(err),
+          });
+        });
+
+        setCsvData(parsedData);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching and parsing CSV:", err);
+        setError("Failed to load CSV data.");
+        setIsLoading(false);
+      }
+    };
+
+    fetchAndParseCSV();
+  }, []);
+
+  const fetchEnvironmentalData = (timestamp) => {
     try {
       setIsLoading(true);
-      // Simulate an API call with dummy data
-      const response = {
-        data: dummyData,
-      };
+      const formattedDate = timestamp.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+      const matchedData = csvData.find((row) => row.date === formattedDate);
 
-      // Map API response to our state structure
+      if (!matchedData) {
+        throw new Error("No data found for the selected date.");
+      }
+
+      // Map matched data to state
       setEnvironmentalData({
-        depth: response.data.depth || null,
-        temperature: response.data.temperature || null,
-        salinity: response.data.salinity || null,
-        pressure: response.data.pressure || null,
-        oxygenLevel: response.data.oxygenLevel || null,
-        currentSpeed: response.data.currentSpeed || null,
-        pH: response.data.pH || null,
+        depth: matchedData.depth || null,
+        temperature: matchedData.temperature || null,
+        salinity: matchedData.salinity || null,
+        pressure: matchedData.pressure || null,
+        oxygenLevel: matchedData.oxygenLevel || null,
+        currentSpeed: matchedData.currentSpeed || null,
+        pH: matchedData.pH || null,
       });
+
       setIsLoading(false);
-    } catch (error) {
-      console.error("Error fetching deep-sea environmental data:", error);
-      setError(error);
+    } catch (err) {
+      console.error("Error fetching environmental data:", err);
+      setError(err.message);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    // Initial fetch for the selected date
-    fetchEnvironmentalData(selectedDate);
-  }, [selectedDate]);
+    if (csvData.length > 0) {
+      fetchEnvironmentalData(selectedDate);
+    }
+  }, [selectedDate, csvData]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -102,7 +122,7 @@ const RealTimeData = () => {
         <div className="error-card">
           <div className="error-icon">❌</div>
           <div className="error-title">Failed to Fetch Data</div>
-          <div className="error-message">There was an issue while fetching the environmental data. Please try again later.</div>
+          <div className="error-message">{error}</div>
         </div>
       </div>
     );
