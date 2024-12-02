@@ -7,6 +7,7 @@ import RealTimeData from "./components/RealTimeData";
 import Visualization from "./components/Visualization";
 import Alerts from "./components/Alerts";
 import Report from "./components/report";
+import Prediction from "./components/Prediction";
 
 const App = () => {
     return (
@@ -24,6 +25,7 @@ const App = () => {
                         <Route path="/visualization" element={<Visualization />} />
                         <Route path="/alerts" element={<Alerts />} />
                         <Route path="/report" element={<Report />} />
+                        <Route path="/prediction" element={<Prediction/>} />
                     </Routes>
                 </main>
             </div>
