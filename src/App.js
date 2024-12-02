@@ -6,6 +6,7 @@ import DataUpload from "./components/DataUpload";
 import RealTimeData from "./components/RealTimeData";
 import Visualization from "./components/Visualization";
 import Alerts from "./components/Alerts";
+import Report from "./components/report";
 
 const App = () => {
     return (
@@ -22,6 +23,7 @@ const App = () => {
                         <Route path="/realtime" element={<RealTimeData />} />
                         <Route path="/visualization" element={<Visualization />} />
                         <Route path="/alerts" element={<Alerts />} />
+                        <Route path="/report" element={<Report />} />
                     </Routes>
                 </main>
             </div>
