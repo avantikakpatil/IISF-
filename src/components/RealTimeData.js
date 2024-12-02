@@ -132,19 +132,19 @@ const RealTimeData = () => {
   }
 
   return (
-    <div>
+    <>
       <h1>Real-Time Data Display</h1>
-      
+
       {/* Date Picker */}
       <input
         type="datetime-local"
         onChange={(e) => handleDateChange(new Date(e.target.value))}
         value={formatSelectedDate(selectedDate)}  // Ensure the correct format is set
       />
-      
+
       {/* Display the selected date */}
       <h2>Selected Date: {formatSelectedDate(selectedDate)}</h2>
-      
+
       {/* Display the environmental data */}
       <div>
         <h3>Environmental Data for {formatSelectedDate(selectedDate)}:</h3>
@@ -158,8 +158,7 @@ const RealTimeData = () => {
           <ParameterDisplay label="Depth" value={environmentalData.depth} unit="m" />
         </div>
       </div>
-      </div>
-    </div>
+    </>
   );
 };
 
