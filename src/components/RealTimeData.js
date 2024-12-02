@@ -158,6 +158,7 @@ const RealTimeData = () => {
           <ParameterDisplay label="Depth" value={environmentalData.depth} unit="m" />
         </div>
       </div>
+      </div>
     </div>
   );
 };
