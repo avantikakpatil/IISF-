@@ -10,9 +10,7 @@ const Sidebar = () => {
                 <li>
                     <Link to="/">Dashboard</Link>
                 </li>
-                <li>
-                    <Link to="/upload">Upload Data</Link>
-                </li>
+                
                 <li>
                     <Link to="/realtime">Real-Time</Link>
                 </li>
@@ -21,6 +19,9 @@ const Sidebar = () => {
                 </li>
                 <li>
                     <Link to="/alerts">Alerts</Link>
+                </li>
+                <li>
+                    <Link to="/upload">Report</Link>
                 </li>
             </ul>
         </div>
