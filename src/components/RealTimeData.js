@@ -129,34 +129,55 @@ const RealTimeData = () => {
   }
 
   return (
-    <div className="monitoring-container">
-      <GlobalStyles />
-      <div className="data-card">
-        <div className="card-header">
-          <h2>Real-Time Environmental Monitoring</h2>
-          <p>Monitoring the deep-sea environment in real-time</p>
-          <div>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="MMMM d, yyyy h:mm aa"
-              className="date-picker"
-            />
-          </div>
+    <div>
+      <h1>Real-Time Data Display</h1>
+      
+      {/* Date Picker */}
+      <input
+        type="datetime-local"
+        onChange={handleDateChange}
+        value={formatSelectedDate(selectedDate)}  // Ensure the correct format is set
+      />
+      
+      {/* Display the selected date */}
+      <h2>Selected Date: {formatSelectedDate(selectedDate)}</h2>
+      
+      {/* Display the filtered data */}
+      {filteredData.length > 0 ? (
+        <div>
+          <h3>Data for {formatSelectedDate(selectedDate)}:</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Temperature (°C)</th>
+                <th>Pressure (bar)</th>
+                <th>Salinity (PSU)</th>
+                <th>Oxygen Level (mg/L)</th>
+                <th>pH Levels</th>
+                <th>Biodiversity (Species Count)</th>
+                <th>Pollutants (ppm)</th>
+                <th>Ocean Currents (m/s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((data, index) => (
+                <tr key={index}>
+                  <td>{data["Temperature (°C)"]}</td>
+                  <td>{data["Pressure (bar)"]}</td>
+                  <td>{data["Salinity (PSU)"]}</td>
+                  <td>{data["Oxygen Level (mg/L)"]}</td>
+                  <td>{data["pH Levels"]}</td>
+                  <td>{data["Biodiversity (Species Count)"]}</td>
+                  <td>{data["Pollutants (ppm)"]}</td>
+                  <td>{data["Ocean Currents (m/s)"]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <div className="parameters-grid">
-          <ParameterDisplay label="Depth" value={environmentalData.depth} unit="m" />
-          <ParameterDisplay label="Temperature" value={environmentalData.temperature} unit="°C" />
-          <ParameterDisplay label="Salinity" value={environmentalData.salinity} unit="PSU" />
-          <ParameterDisplay label="Pressure" value={environmentalData.pressure} unit="dBar" />
-          <ParameterDisplay label="Oxygen Level" value={environmentalData.oxygenLevel} unit="mg/L" />
-          <ParameterDisplay label="Current Speed" value={environmentalData.currentSpeed} unit="m/s" />
-          <ParameterDisplay label="pH" value={environmentalData.pH} unit="" />
-        </div>
-      </div>
+      ) : (
+        <p>No data available for the selected date and time</p>
+      )}
     </div>
   );
 };
