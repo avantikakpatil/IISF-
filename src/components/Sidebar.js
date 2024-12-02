@@ -23,6 +23,9 @@ const Sidebar = () => {
                 <li>
                     <Link to="/report">Report</Link>
                 </li>
+                <li>
+                    <Link to="/prediction">Predictions</Link>
+                </li>
             </ul>
         </div>
     );
